@@ -481,258 +481,145 @@
         </div>
     </div>
 
-   <script>
-// Navigation Toggle - FIXED VERSION
-const navToggle = document.getElementById('navToggle');
-const navMenu = document.getElementById('navMenu');
-
-if (navToggle && navMenu) {
-    navToggle.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent event from bubbling up
-        navMenu.classList.toggle('active');
-    });
-
-    // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!navToggle.contains(e.target) && !navMenu.contains(e.target)) {
-            navMenu.classList.remove('active');
-        }
-    });
-
-    // Close menu when clicking on nav links
-    const navLinks = navMenu.querySelectorAll('a');
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            navMenu.classList.remove('active');
-        });
-    });
-}
-
-// Gallery Logic - AUTO DETECT VERSION
-class Gallery {
-    constructor() {
-        this.galleryGrid = document.getElementById('galleryGrid');
-        this.loading = document.getElementById('loading');
-        this.modal = document.getElementById('imageModal');
-        this.modalImage = document.getElementById('modalImage');
-        this.modalClose = document.getElementById('modalClose');
-        this.modalPrev = document.getElementById('modalPrev');
-        this.modalNext = document.getElementById('modalNext');
-        this.imageCounter = document.getElementById('imageCounter');
+  <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const galleryGrid = document.getElementById('galleryGrid');
+    const loadingElement = document.getElementById('loading');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxClose = document.getElementById('lightboxClose');
+    
+    // Configuration - USE THE SAME APPROACH AS YOUR GALLERY.HTML
+    const initialLoad = 12; // Number of images to load initially
+    const loadMoreCount = 12; // Number of images to load each time
+    const startFrom = 150; // Start from highest image number (adjust this based on your actual highest image)
+    
+    let loadedImages = 0;
+    let currentNumber = startFrom;
+    
+    // Load initial images (newest first)
+    loadImages(initialLoad);
+    
+    // Function to load images (newest first) - SIMPLE AND FAST
+    function loadImages(count) {
+        loadingElement.classList.add('active');
         
-        this.loadedImages = [];
-        this.currentImageIndex = 0;
-        this.batchSize = 20;
-        this.currentBatch = 0;
-        this.isLoading = false;
-        this.maxImageNumber = 150; // Set to your highest image number
+        const fragment = document.createDocumentFragment();
+        let imagesLoaded = 0;
         
-        this.init();
-    }
-
-    async init() {
-        // Show loading immediately
-        this.loading.style.display = 'block';
-        this.loading.innerHTML = '<div class="loader"></div><p>Scanning for images...</p>';
-        
-        await this.findAvailableImages();
-        this.loadInitialImages();
-        this.setupEventListeners();
-        this.setupModal();
-    }
-
-    async findAvailableImages() {
-        console.log("🔍 Scanning for available images...");
-        
-        this.availableImages = [];
-        const checkPromises = [];
-        
-        // Check images from highest to lowest (most recent first)
-        for (let i = this.maxImageNumber; i > 0; i--) {
-            checkPromises.push(this.checkImageExists(i));
-            
-            if (checkPromises.length >= 15) {
-                const results = await Promise.all(checkPromises);
-                this.availableImages.push(...results.filter(img => img !== null));
-                checkPromises.length = 0;
+        function tryLoadImage() {
+            if (imagesLoaded >= count || currentNumber < 1) {
+                // Finished loading batch
+                galleryGrid.appendChild(fragment);
+                loadingElement.classList.remove('active');
+                return;
             }
-        }
-        
-        if (checkPromises.length > 0) {
-            const results = await Promise.all(checkPromises);
-            this.availableImages.push(...results.filter(img => img !== null));
-        }
-        
-        console.log(`✅ Found ${this.availableImages.length} images`);
-        this.totalImages = this.availableImages.length;
-    }
-
-    async checkImageExists(imageNumber) {
-        return new Promise((resolve) => {
-            const img = new Image();
-            img.onload = () => resolve(imageNumber);
-            img.onerror = () => resolve(null);
-            setTimeout(() => resolve(null), 300); // Faster timeout
-            img.src = `images/${imageNumber}.jpg`;
-        });
-    }
-
-    loadInitialImages() {
-        if (this.availableImages.length === 0) {
-            this.loading.innerHTML = '<div class="loader"></div><p>No images found. Please check your images folder.</p>';
-            return;
-        }
-        this.loadImageBatch();
-    }
-
-    async loadImageBatch() {
-        if (this.isLoading || this.currentBatch * this.batchSize >= this.totalImages) return;
-        
-        this.isLoading = true;
-        this.loading.innerHTML = '<div class="loader"></div><p>Loading images...</p>';
-
-        const startIndex = this.currentBatch * this.batchSize;
-        const endIndex = Math.min(startIndex + this.batchSize, this.totalImages);
-        
-        const loadPromises = [];
-        
-        for (let i = startIndex; i < endIndex; i++) {
-            const imageNumber = this.availableImages[i];
-            loadPromises.push(this.loadSingleImage(imageNumber));
-        }
-
-        await Promise.all(loadPromises);
-        this.currentBatch++;
-        this.isLoading = false;
-        
-        // Hide loading after first batch
-        if (this.currentBatch >= 1) {
-            setTimeout(() => {
-                this.loading.style.display = 'none';
-            }, 500);
-        }
-    }
-
-    async loadSingleImage(imageNumber) {
-        return new Promise((resolve) => {
-            const img = new Image();
-            img.onload = () => {
-                this.addImageToGrid(imageNumber, img.src);
-                this.loadedImages.push(imageNumber);
-                resolve();
-            };
-            img.onerror = () => {
-                console.log(`⚠️ Failed to load image ${imageNumber}.jpg`);
-                resolve();
-            };
-            img.src = `images/${imageNumber}.jpg`;
-        });
-    }
-
-    addImageToGrid(imageNumber, src) {
-        const galleryItem = document.createElement('div');
-        galleryItem.className = 'gallery-item';
-        galleryItem.innerHTML = `
-            <img src="${src}" alt="Taps Media Photography - Image ${imageNumber}" loading="lazy">
-            <div class="image-number">#${imageNumber}</div>
-        `;
-
-        galleryItem.addEventListener('click', () => {
-            this.openModal(imageNumber);
-        });
-
-        this.galleryGrid.appendChild(galleryItem);
-    }
-
-    setupEventListeners() {
-        let scrollTimeout;
-        window.addEventListener('scroll', () => {
-            if (scrollTimeout) clearTimeout(scrollTimeout);
             
-            scrollTimeout = setTimeout(() => {
-                if (this.isLoading) return;
+            const img = new Image();
+            img.onload = function() {
+                // Image exists, add it to gallery
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
                 
-                const scrollTop = window.scrollY || document.documentElement.scrollTop;
-                const windowHeight = window.innerHeight;
-                const documentHeight = document.documentElement.scrollHeight;
+                // Store the current number for this specific image
+                const imageNumber = currentNumber;
                 
-                if (scrollTop + windowHeight >= documentHeight - 200) {
-                    this.loadImageBatch();
-                }
-            }, 150);
-        });
-    }
-
-    setupModal() {
-        if (this.modalClose) {
-            this.modalClose.addEventListener('click', () => this.closeModal());
-        }
-        if (this.modalPrev) {
-            this.modalPrev.addEventListener('click', () => this.navigateModal(-1));
-        }
-        if (this.modalNext) {
-            this.modalNext.addEventListener('click', () => this.navigateModal(1));
+                item.innerHTML = `<img src="images/${imageNumber}.jpg" alt="Gallery Image ${imageNumber}" class="gallery-img">`;
+                
+                item.addEventListener('click', function() {
+                    // Use the specific image number for this item
+                    lightboxImg.src = `images/${imageNumber}.jpg`;
+                    lightboxImg.alt = `Gallery Image ${imageNumber}`;
+                    lightbox.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+                
+                fragment.appendChild(item);
+                imagesLoaded++;
+                loadedImages++;
+                currentNumber--;
+                tryLoadImage();
+            };
+            
+            img.onerror = function() {
+                // Image doesn't exist, try next number
+                currentNumber--;
+                tryLoadImage();
+            };
+            
+            img.src = `images/${currentNumber}.jpg`;
         }
         
-        document.addEventListener('keydown', (e) => {
-            if (!this.modal.classList.contains('active')) return;
-            
-            if (e.key === 'Escape') this.closeModal();
-            if (e.key === 'ArrowLeft') this.navigateModal(-1);
-            if (e.key === 'ArrowRight') this.navigateModal(1);
-        });
-
-        this.modal.addEventListener('click', (e) => {
-            if (e.target === this.modal) {
-                this.closeModal();
-            }
-        });
+        tryLoadImage();
     }
-
-    openModal(imageNumber) {
-        this.currentImageIndex = this.loadedImages.indexOf(imageNumber);
-        if (this.currentImageIndex !== -1) {
-            this.updateModalImage();
-            this.modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
+    
+    // Function to check if user has scrolled to bottom
+    function isAtBottom() {
+        return window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
+    }
+    
+    // Function to handle scroll event
+    function handleScroll() {
+        if (isAtBottom() && !loadingElement.classList.contains('active') && currentNumber > 0) {
+            loadImages(loadMoreCount);
         }
     }
-
-    closeModal() {
-        this.modal.classList.remove('active');
+    
+    // Add scroll event listener
+    window.addEventListener('scroll', handleScroll);
+    
+    // Close lightbox when close button is clicked
+    lightboxClose.addEventListener('click', function() {
+        lightbox.classList.remove('active');
         document.body.style.overflow = 'auto';
-    }
-
-    navigateModal(direction) {
-        this.currentImageIndex += direction;
-        
-        if (this.currentImageIndex < 0) {
-            this.currentImageIndex = this.loadedImages.length - 1;
-        } else if (this.currentImageIndex >= this.loadedImages.length) {
-            this.currentImageIndex = 0;
+    });
+    
+    // Close lightbox when clicking outside the image
+    lightbox.addEventListener('click', function(e) {
+        if (e.target === lightbox) {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = 'auto';
         }
-        
-        this.updateModalImage();
-    }
-
-    updateModalImage() {
-        const imageNumber = this.loadedImages[this.currentImageIndex];
-        this.modalImage.src = `images/${imageNumber}.jpg`;
-        this.imageCounter.textContent = `${this.currentImageIndex + 1} / ${this.loadedImages.length}`;
-    }
-}
-
-// Activate glow animation after delay
-setTimeout(() => {
-    const navToggle = document.querySelector('.nav-toggle');
-    if (navToggle) {
-        navToggle.style.animation = 'glow 3s linear infinite';
-    }
-}, 2000);
-
-// Initialize gallery when page loads
-document.addEventListener('DOMContentLoaded', () => {
-    new Gallery();
+    });
+    
+    // Close lightbox with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    });
+    
+    // Toggle mobile navigation
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    const body = document.querySelector('body');
+    
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navLinks.classList.toggle('open');
+        body.classList.toggle('no-scroll');
+    });
+    
+    // Header scroll effect
+    const header = document.getElementById('header');
+    
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 100) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+    
+    // Close mobile menu when clicking on a link
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navLinks.classList.remove('open');
+            body.classList.remove('no-scroll');
+        });
+    });
 });
 </script>
 
