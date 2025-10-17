@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About & Contact - Taps Media | Professional Photography in Masvingo</title>
+    <meta name="description" content="Contact Taps Media for professional photography, videography, and music video production in Masvingo, Zimbabwe. Get in touch for weddings, events, and creative projects.">
+    <meta name="keywords" content="Taps Media, contact photographers Masvingo, videography Zimbabwe, wedding photography, music videos, professional photographers, Masvingo studio">
+    <meta name="author" content="Taps Media">
+    <meta property="og:title" content="About & Contact - Taps Media | Professional Photography & Videography">
+    <meta property="og:description" content="Get in touch with Taps Media for professional photography in Masvingo, Zimbabwe.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tapsmedia.co.zw/about.html">
+    <link rel="canonical" href="https://tapsmedia.co.zw/about.html">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="images/logo.png" type"image/png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Floating Navigation */
+        .floating-nav {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .nav-toggle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-toggle:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .nav-toggle::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            animation: glow 3s linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes glow {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+                border-color: #fff;
+            }
+            50% {
+                border-color: #ff0080;
+            }
+            100% {
+                transform: scale(1.2);
+                opacity: 0;
+                border-color: #fff;
+            }
+        }
+
+        .nav-toggle span {
+            width: 25px;
+            height: 2px;
+            background: #fff;
+            margin: 2px 0;
+            transition: 0.3s;
+        }
+
+        .nav-menu {
+            position: absolute;
+            top: 70px;
+            right: 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 15px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-20px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .nav-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            color: #fff;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin: 5px 0;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-menu a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(-5px);
+        }
+
+        .nav-menu a.active {
+            background: rgba(255, 0, 128, 0.3);
+        }
+
+        .nav-menu a i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        /* About Hero */
+        .about-hero {
+            height: 60vh;
+            background: 
+                linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.8)),
+                url('https://photographyproject.uk/wp-content/uploads/2024/01/06-3416-post/canon-camera-e1704554602159.jpg') center/cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .about-hero h1 {
+            font-size: 4rem;
+            font-weight: 300;
+            letter-spacing: 6px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            background: linear-gradient(45deg, #fff, #ff0080);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeIn 1.5s ease;
+        }
+
+        .about-hero p {
+            font-size: 1.3rem;
+            max-width: 600px;
+            color: #ccc;
+            animation: fadeIn 2s ease;
+        }
+
+        /* Quick Intro */
+        .quick-intro {
+            padding: 80px 20px;
+            background: linear-gradient(45deg, rgba(10,10,10,0.9), rgba(15,10,15,0.9));
+            text-align: center;
+        }
+
+        .intro-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .intro-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #fff, #ff0080);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 300;
+        }
+
+        .intro-content p {
+            font-size: 1.1rem;
+            color: #e6e6e6;
+            margin-bottom: 25px;
+            line-height: 1.8;
+        }
+
+        .brothers-mention {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 40px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 4px solid #ff0080;
+        }
+
+        /* Services Overview */
+        .services-overview {
+            padding: 80px 20px;
+            background: 
+                linear-gradient(rgba(10,10,10,0.95), rgba(10,10,10,0.98)),
+                url('images/69.jpg') center/cover fixed;
+        }
+
+        .services-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            padding: 40px 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(255, 0, 128, 0.2);
+        }
+
+        .service-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 0, 128, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            color: #ff0080;
+            font-size: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover .service-icon {
+            transform: scale(1.1);
+            background: rgba(255, 0, 128, 0.3);
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .service-card p {
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            padding: 100px 20px;
+            background: linear-gradient(45deg, rgba(15,10,15,0.9), rgba(10,10,10,0.9));
+        }
+
+        .contact-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .contact-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .contact-header h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #fff, #ff0080);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 300;
+            letter-spacing: 3px;
+        }
+
+        .contact-header p {
+            font-size: 1.2rem;
+            color: #ccc;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: start;
+        }
+
+        .contact-info {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .contact-info h3 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #fff;
+            font-weight: 300;
+        }
+
+        .contact-details {
+            margin-bottom: 30px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            color: #ccc;
+        }
+
+        .contact-item i {
+            color: #ff0080;
+            width: 20px;
+            font-size: 1.1rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .social-link {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 0, 128, 0.3);
+        }
+
+        .social-link.whatsapp:hover {
+            background: #25D366;
+        }
+
+        .social-link.instagram:hover {
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        }
+
+        .social-link.youtube:hover {
+            background: #FF0000;
+        }
+
+        .social-link.tiktok:hover {
+            background: #000000;
+        }
+
+        .location-info {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .location-info h3 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #fff;
+            font-weight: 300;
+        }
+
+        .address {
+            margin-bottom: 30px;
+        }
+
+        .address-line {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+            color: #ccc;
+        }
+
+        .address-line i {
+            color: #ff0080;
+            margin-top: 2px;
+        }
+
+        .map-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .map-button:hover {
+            background: rgba(255, 0, 128, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Music Video CTA */
+        .music-cta {
+            padding: 80px 20px;
+            background: 
+                linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.95)),
+                url('images/69.jpg') center/cover fixed;
+            text-align: center;
+        }
+
+        .music-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .music-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #fff, #ff0080);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 300;
+        }
+
+        .music-content p {
+            font-size: 1.2rem;
+            color: #ccc;
+            margin-bottom: 30px;
+            line-height: 1.7;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #ff0080, #ff4da6);
+            border: none;
+            padding: 15px 35px;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 0, 128, 0.4);
+            background: linear-gradient(45deg, #ff4da6, #ff0080);
+        }
+
+        /* Footer */
+        .footer-bottom {
+            padding: 30px 20px;
+            background: rgba(5, 5, 5, 0.95);
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copyright {
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .designer-credit {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .designer-whatsapp {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(37, 211, 102, 0.1);
+            border: 1px solid rgba(37, 211, 102, 0.3);
+            color: #25D366;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .designer-whatsapp:hover {
+            background: #25D366;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 968px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .about-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .contact-header h2 {
+                font-size: 2.2rem;
+            }
+            
+            .music-content h2 {
+                font-size: 2rem;
+            }
+            
+            .floating-nav {
+                top: 20px;
+                right: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .about-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .contact-info, .location-info {
+                padding: 30px 20px;
+            }
+            
+            .service-card {
+                padding: 30px 20px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .service-card {
+            animation: fadeIn 0.6s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Navigation -->
+    <nav class="floating-nav">
+        <div class="nav-toggle" id="navToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="nav-menu" id="navMenu">
+            <a href="../">
+                <i class="fas fa-home"></i>
+                Home
+            </a>
+            <a href="../gallery/">
+                <i class="fas fa-images"></i>
+                Gallery
+            </a>
+            <a href="../wedding/">
+                <i class="fas fa-ring"></i>
+                Weddings
+            </a>
+            <a href="../about/" class="active">
+                <i class="fas fa-user"></i>
+                About
+            </a>
+        </div>
+    </nav>
+
+    <!-- About Hero -->
+    <section class="about-hero">
+        <h1>About & Contact</h1>
+        <p>Get in touch with Masvingo's premier photography studio</p>
+    </section>
+
+    <!-- Quick Intro -->
+    <section class="quick-intro">
+        <div class="intro-content">
+            <h2>Welcome to Taps Media</h2>
+            <p>Taps Media has been serving Masvingo and beyond with exceptional photography and videography services for years. What began as a passion project has grown into a full-service media studio known for creative excellence and authentic storytelling.</p>
+            
+            <div class="brothers-mention">
+                <p>Founded by brothers Givy Taps and Lastie Chinyengetere, our studio combines technical expertise with artistic vision to deliver outstanding results for every client.</p>
+            </div>
+            
+            <p>We believe in preserving precious moments that last generations, bringing professional quality and creative passion to every project we undertake.</p>
+        </div>
+    </section>
+
+    <!-- Services Overview -->
+    <section class="services-overview">
+        <div class="services-container">
+            <div class="contact-header">
+                <h2>Our Services</h2>
+                <p>Comprehensive media solutions for all your needs</p>
+            </div>
+            
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h3>Professional Photography</h3>
+                    <p>Weddings, portraits, events, and commercial photography with artistic vision and technical excellence.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <h3>Videography Services</h3>
+                    <p>Event coverage, documentaries, and commercial videos with professional equipment and editing.</p>
+                </div>
+                
+               
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section">
+        <div class="contact-container">
+            <div class="contact-header">
+                <h2>Get In Touch</h2>
+                <p>Ready to capture your special moments? Contact us today</p>
+            </div>
+            
+            <div class="contact-grid">
+                <!-- Contact Info -->
+                <div class="contact-info">
+                    <h3>Contact Information</h3>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>+263 77 330 5176</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>info@tapsmedia.com</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-clock"></i>
+                            <span>Mon - Sun: 8:00 AM - 8:00 PM</span>
+                        </div>
+                    </div>
+                    
+                    <div class="social-links">
+                        <a href="https://wa.me/263773305176" class="social-link whatsapp" target="_blank" aria-label="WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="https://www.instagram.com/taps_media?igsh=bDFmajU2YzVqOGxy" class="social-link instagram" target="_blank" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://youtube.com/@givemorechinyengetere3518?si=PCDKQhdHv3aNq-hz" class="social-link youtube" target="_blank" aria-label="YouTube">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="https://www.tiktok.com/@taps.media?_t=ZM-8z4SDdb9XL3&_r=1" class="social-link tiktok" target="_blank" aria-label="TikTok">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Location Info -->
+                <div class="location-info">
+                    <h3>Visit Our Studio</h3>
+                    <div class="address">
+                        <div class="address-line">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>1st Floor, First Door to the Right</span>
+                        </div>
+                        <div class="address-line">
+                            <i class="fas fa-building"></i>
+                            <span>Building near Central Police Station</span>
+                        </div>
+                        <div class="address-line">
+                            <i class="fas fa-city"></i>
+                            <span>Masvingo Town, Zimbabwe</span>
+                        </div>
+                        <div class="address-line">
+                            <i class="fas fa-map"></i>
+                            <span>Commercial Centre Building</span>
+                        </div>
+                    </div>
+                    <a href="https://maps.app.goo.gl/Ejhi1Vpyth9XDhJU9" class="map-button" target="_blank">
+                        <i class="fas fa-map-marked-alt"></i>
+                        Open in Google Maps
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Music Video CTA -->
+    <section class="music-cta">
+        <div class="music-content">
+            <h2>NOT JUST PHOTOGRAPHY - WE SHOOT MUSIC VIDEOS TOO!</h2>
+            <p>Our creative team and equipment are perfectly suited for music video production. From concept development to final editing, we bring your musical vision to life with the same quality and passion we apply to all our work.</p>
+            <a href="https://wa.me/263773305176" class="cta-button" target="_blank">
+                <i class="fab fa-whatsapp"></i>
+                Inquire About Music Videos
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer-bottom">
+        <div class="footer-content">
+            <div class="copyright">
+                <p>&copy; 2024 Taps Media. All rights reserved.</p>
+            </div>
+            <div class="designer-credit">
+                <span>Designed by Anesu Praise</span>
+                <a href="https://wa.me/263777610645" class="designer-whatsapp" target="_blank" aria-label="Contact Designer on WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation Toggle
+        const navToggle = document.getElementById('navToggle');
+        const navMenu = document.getElementById('navMenu');
+
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            navToggle.classList.toggle('active');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!navToggle.contains(e.target) && !navMenu.contains(e.target)) {
+                navMenu.classList.remove('active');
+            }
+        });
+
+        // Activate glow animation after delay
+        setTimeout(() => {
+            document.querySelector('.nav-toggle').style.animation = 'glow 3s linear infinite';
+        }, 2000);
+
+        // Add intersection observer for animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        // Observe elements for animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const animatedElements = document.querySelectorAll('.service-card');
+            animatedElements.forEach(element => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(20px)';
+                element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(element);
+            });
+        });
+    </script>
+</body>
+</html>

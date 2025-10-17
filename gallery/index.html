@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - Taps Media</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+     <link rel="icon" href="images/logo.png" type"image/png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+         /* Floating Navigation */
+        .floating-nav {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .nav-toggle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-toggle:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .nav-toggle::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            animation: glow 3s linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes glow {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+                border-color: #fff;
+            }
+            50% {
+                border-color: #ff0080;
+            }
+            100% {
+                transform: scale(1.2);
+                opacity: 0;
+                border-color: #fff;
+            }
+        }
+
+        .nav-toggle span {
+            width: 25px;
+            height: 2px;
+            background: #fff;
+            margin: 2px 0;
+            transition: 0.3s;
+        }
+
+        .nav-menu {
+            position: absolute;
+            top: 70px;
+            right: 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 15px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-20px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .nav-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            color: #fff;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin: 5px 0;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-menu a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(-5px);
+        }
+
+        .nav-menu a.active {
+            background: rgba(255, 0, 128, 0.3);
+        }
+
+        .nav-menu a i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+
+        /* Gallery Hero */
+        .gallery-hero {
+            height: 60vh;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1502982720700-bfff97f2ecac?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=870') center/cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .gallery-hero h1 {
+            font-size: 4rem;
+            font-weight: 300;
+            letter-spacing: 8px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            background: linear-gradient(45deg, #fff, #aaa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeIn 1.5s ease;
+        }
+
+        .gallery-hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            color: #ccc;
+            animation: fadeIn 2s ease;
+        }
+
+        /* Gallery Grid */
+        .gallery-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 50px 20px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            aspect-ratio: 4/3;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(255, 0, 128, 0.3);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255, 0, 128, 0.2), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 1;
+        }
+
+        .gallery-item:hover::before {
+            opacity: 1;
+        }
+
+        .image-number {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item:hover .image-number {
+            opacity: 1;
+        }
+
+        /* Loading Animation */
+        .loading {
+            text-align: center;
+            padding: 30px;
+            color: #ccc;
+        }
+
+        .loader {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid #ff0080;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-image {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 0, 128, 0.3);
+            transform: scale(1.1);
+        }
+
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.5rem;
+        }
+
+        .modal-prev {
+            left: 20px;
+        }
+
+        .modal-next {
+            right: 20px;
+        }
+
+        .modal-nav:hover {
+            background: rgba(255, 0, 128, 0.3);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .image-counter {
+            position: absolute;
+            bottom: -40px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: #ccc;
+            font-size: 1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 15px;
+            }
+
+            .gallery-hero h1 {
+                font-size: 2.5rem;
+                letter-spacing: 4px;
+            }
+
+            .modal-nav {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+
+            .modal-prev {
+                left: 10px;
+            }
+
+            .modal-next {
+                right: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 10px;
+            }
+
+            .gallery-hero h1 {
+                font-size: 2rem;
+            }
+
+            .floating-nav {
+                top: 20px;
+                right: 20px;
+            }
+
+            .nav-toggle {
+                width: 50px;
+                height: 50px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .gallery-item {
+            animation: fadeIn 0.6s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Navigation -->
+    <nav class="floating-nav">
+        <div class="nav-toggle" id="navToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="nav-menu" id="navMenu">
+            <a href="../">
+                <i class="fas fa-home"></i>
+                Home
+            </a>
+            <a href="../gallery/" class="active">
+                <i class="fas fa-images"></i>
+                Gallery
+            </a>
+            <a href="../wedding/">
+                <i class="fas fa-ring"></i>
+                Weddings
+            </a>
+            <a href="../about/">
+                <i class="fas fa-user"></i>
+                About
+            </a>
+        </div>
+    </nav>
+
+    <!-- Gallery Hero -->
+    <section class="gallery-hero">
+        <h1>Our Gallery</h1>
+        <p>Explore our collection of captured moments and visual stories</p>
+    </section>
+
+    <!-- Gallery Grid -->
+    <div class="gallery-container">
+        <div class="gallery-grid" id="galleryGrid"></div>
+        <div class="loading" id="loading">
+            <div class="loader"></div>
+            <p>Loading more beautiful moments...</p>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="imageModal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">
+                <i class="fas fa-times"></i>
+            </button>
+            <button class="modal-nav modal-prev" id="modalPrev">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <img class="modal-image" id="modalImage" src="" alt="">
+            <button class="modal-nav modal-next" id="modalNext">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            <div class="image-counter" id="imageCounter"></div>
+        </div>
+    </div>
+
+   <script>
+// Navigation Toggle - FIXED VERSION
+const navToggle = document.getElementById('navToggle');
+const navMenu = document.getElementById('navMenu');
+
+if (navToggle && navMenu) {
+    navToggle.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent event from bubbling up
+        navMenu.classList.toggle('active');
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!navToggle.contains(e.target) && !navMenu.contains(e.target)) {
+            navMenu.classList.remove('active');
+        }
+    });
+
+    // Close menu when clicking on nav links
+    const navLinks = navMenu.querySelectorAll('a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            navMenu.classList.remove('active');
+        });
+    });
+}
+
+// Gallery Logic - AUTO DETECT VERSION
+class Gallery {
+    constructor() {
+        this.galleryGrid = document.getElementById('galleryGrid');
+        this.loading = document.getElementById('loading');
+        this.modal = document.getElementById('imageModal');
+        this.modalImage = document.getElementById('modalImage');
+        this.modalClose = document.getElementById('modalClose');
+        this.modalPrev = document.getElementById('modalPrev');
+        this.modalNext = document.getElementById('modalNext');
+        this.imageCounter = document.getElementById('imageCounter');
+        
+        this.loadedImages = [];
+        this.currentImageIndex = 0;
+        this.batchSize = 20;
+        this.currentBatch = 0;
+        this.isLoading = false;
+        this.maxImageNumber = 150; // Set to your highest image number
+        
+        this.init();
+    }
+
+    async init() {
+        // Show loading immediately
+        this.loading.style.display = 'block';
+        this.loading.innerHTML = '<div class="loader"></div><p>Scanning for images...</p>';
+        
+        await this.findAvailableImages();
+        this.loadInitialImages();
+        this.setupEventListeners();
+        this.setupModal();
+    }
+
+    async findAvailableImages() {
+        console.log("🔍 Scanning for available images...");
+        
+        this.availableImages = [];
+        const checkPromises = [];
+        
+        // Check images from highest to lowest (most recent first)
+        for (let i = this.maxImageNumber; i > 0; i--) {
+            checkPromises.push(this.checkImageExists(i));
+            
+            if (checkPromises.length >= 15) {
+                const results = await Promise.all(checkPromises);
+                this.availableImages.push(...results.filter(img => img !== null));
+                checkPromises.length = 0;
+            }
+        }
+        
+        if (checkPromises.length > 0) {
+            const results = await Promise.all(checkPromises);
+            this.availableImages.push(...results.filter(img => img !== null));
+        }
+        
+        console.log(`✅ Found ${this.availableImages.length} images`);
+        this.totalImages = this.availableImages.length;
+    }
+
+    async checkImageExists(imageNumber) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => resolve(imageNumber);
+            img.onerror = () => resolve(null);
+            setTimeout(() => resolve(null), 300); // Faster timeout
+            img.src = `images/${imageNumber}.jpg`;
+        });
+    }
+
+    loadInitialImages() {
+        if (this.availableImages.length === 0) {
+            this.loading.innerHTML = '<div class="loader"></div><p>No images found. Please check your images folder.</p>';
+            return;
+        }
+        this.loadImageBatch();
+    }
+
+    async loadImageBatch() {
+        if (this.isLoading || this.currentBatch * this.batchSize >= this.totalImages) return;
+        
+        this.isLoading = true;
+        this.loading.innerHTML = '<div class="loader"></div><p>Loading images...</p>';
+
+        const startIndex = this.currentBatch * this.batchSize;
+        const endIndex = Math.min(startIndex + this.batchSize, this.totalImages);
+        
+        const loadPromises = [];
+        
+        for (let i = startIndex; i < endIndex; i++) {
+            const imageNumber = this.availableImages[i];
+            loadPromises.push(this.loadSingleImage(imageNumber));
+        }
+
+        await Promise.all(loadPromises);
+        this.currentBatch++;
+        this.isLoading = false;
+        
+        // Hide loading after first batch
+        if (this.currentBatch >= 1) {
+            setTimeout(() => {
+                this.loading.style.display = 'none';
+            }, 500);
+        }
+    }
+
+    async loadSingleImage(imageNumber) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => {
+                this.addImageToGrid(imageNumber, img.src);
+                this.loadedImages.push(imageNumber);
+                resolve();
+            };
+            img.onerror = () => {
+                console.log(`⚠️ Failed to load image ${imageNumber}.jpg`);
+                resolve();
+            };
+            img.src = `images/${imageNumber}.jpg`;
+        });
+    }
+
+    addImageToGrid(imageNumber, src) {
+        const galleryItem = document.createElement('div');
+        galleryItem.className = 'gallery-item';
+        galleryItem.innerHTML = `
+            <img src="${src}" alt="Taps Media Photography - Image ${imageNumber}" loading="lazy">
+            <div class="image-number">#${imageNumber}</div>
+        `;
+
+        galleryItem.addEventListener('click', () => {
+            this.openModal(imageNumber);
+        });
+
+        this.galleryGrid.appendChild(galleryItem);
+    }
+
+    setupEventListeners() {
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            if (scrollTimeout) clearTimeout(scrollTimeout);
+            
+            scrollTimeout = setTimeout(() => {
+                if (this.isLoading) return;
+                
+                const scrollTop = window.scrollY || document.documentElement.scrollTop;
+                const windowHeight = window.innerHeight;
+                const documentHeight = document.documentElement.scrollHeight;
+                
+                if (scrollTop + windowHeight >= documentHeight - 200) {
+                    this.loadImageBatch();
+                }
+            }, 150);
+        });
+    }
+
+    setupModal() {
+        if (this.modalClose) {
+            this.modalClose.addEventListener('click', () => this.closeModal());
+        }
+        if (this.modalPrev) {
+            this.modalPrev.addEventListener('click', () => this.navigateModal(-1));
+        }
+        if (this.modalNext) {
+            this.modalNext.addEventListener('click', () => this.navigateModal(1));
+        }
+        
+        document.addEventListener('keydown', (e) => {
+            if (!this.modal.classList.contains('active')) return;
+            
+            if (e.key === 'Escape') this.closeModal();
+            if (e.key === 'ArrowLeft') this.navigateModal(-1);
+            if (e.key === 'ArrowRight') this.navigateModal(1);
+        });
+
+        this.modal.addEventListener('click', (e) => {
+            if (e.target === this.modal) {
+                this.closeModal();
+            }
+        });
+    }
+
+    openModal(imageNumber) {
+        this.currentImageIndex = this.loadedImages.indexOf(imageNumber);
+        if (this.currentImageIndex !== -1) {
+            this.updateModalImage();
+            this.modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    closeModal() {
+        this.modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+
+    navigateModal(direction) {
+        this.currentImageIndex += direction;
+        
+        if (this.currentImageIndex < 0) {
+            this.currentImageIndex = this.loadedImages.length - 1;
+        } else if (this.currentImageIndex >= this.loadedImages.length) {
+            this.currentImageIndex = 0;
+        }
+        
+        this.updateModalImage();
+    }
+
+    updateModalImage() {
+        const imageNumber = this.loadedImages[this.currentImageIndex];
+        this.modalImage.src = `images/${imageNumber}.jpg`;
+        this.imageCounter.textContent = `${this.currentImageIndex + 1} / ${this.loadedImages.length}`;
+    }
+}
+
+// Activate glow animation after delay
+setTimeout(() => {
+    const navToggle = document.querySelector('.nav-toggle');
+    if (navToggle) {
+        navToggle.style.animation = 'glow 3s linear infinite';
+    }
+}, 2000);
+
+// Initialize gallery when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    new Gallery();
+});
+</script>
+
+</body>
+</html>
