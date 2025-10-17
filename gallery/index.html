@@ -579,7 +579,7 @@ class Gallery {
 
     loadInitialImages() {
         if (this.availableImages.length === 0) {
-            this.loading.innerHTML = '<div class="loader"></div><p>No images found. Please check your images folder.</p>';
+            this.loading.innerHTML = '<div class="loader"></div><p>Failed to load images. Try refreshing this page..</p>';
             return;
         }
         this.loadImageBatch();
