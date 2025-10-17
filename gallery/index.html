@@ -481,23 +481,25 @@
         </div>
     </div>
 
-  <script>
+   <script>
 // Navigation Toggle - FIXED VERSION
 const navToggle = document.getElementById('navToggle');
 const navMenu = document.getElementById('navMenu');
 
 if (navToggle && navMenu) {
     navToggle.addEventListener('click', (e) => {
-        e.stopPropagation();
+        e.stopPropagation(); // Prevent event from bubbling up
         navMenu.classList.toggle('active');
     });
 
+    // Close menu when clicking outside
     document.addEventListener('click', (e) => {
         if (!navToggle.contains(e.target) && !navMenu.contains(e.target)) {
             navMenu.classList.remove('active');
         }
     });
 
+    // Close menu when clicking on nav links
     const navLinks = navMenu.querySelectorAll('a');
     navLinks.forEach(link => {
         link.addEventListener('click', () => {
@@ -506,7 +508,7 @@ if (navToggle && navMenu) {
     });
 }
 
-// Gallery Logic - OPTIMIZED FAST VERSION
+// Gallery Logic - AUTO DETECT VERSION
 class Gallery {
     constructor() {
         this.galleryGrid = document.getElementById('galleryGrid');
@@ -520,137 +522,109 @@ class Gallery {
         
         this.loadedImages = [];
         this.currentImageIndex = 0;
-        this.batchSize = 12; // Smaller batch for faster display
+        this.batchSize = 20;
         this.currentBatch = 0;
         this.isLoading = false;
-        this.maxImageNumber = 150;
+        this.maxImageNumber = 150; // Set to your highest image number
         
         this.init();
     }
 
     async init() {
+        // Show loading immediately
         this.loading.style.display = 'block';
-        this.loading.innerHTML = '<div class="loader"></div><p>Loading gallery...</p>';
+        this.loading.innerHTML = '<div class="loader"></div><p>Scanning for images...</p>';
         
-        // Start displaying images immediately while scanning continues
+        await this.findAvailableImages();
         this.loadInitialImages();
         this.setupEventListeners();
         this.setupModal();
     }
 
-    async loadInitialImages() {
-        console.log("🚀 Starting fast image loading...");
+    async findAvailableImages() {
+        console.log("🔍 Scanning for available images...");
         
-        // Load first batch immediately with common numbers
-        const commonNumbers = this.generateCommonNumbers();
-        await this.loadFirstBatch(commonNumbers);
+        this.availableImages = [];
+        const checkPromises = [];
         
-        // Continue scanning in background
-        this.scanRemainingImages();
-    }
-
-    generateCommonNumbers() {
-        // Start from highest numbers (most recent) and work backwards
-        const numbers = [];
-        for (let i = this.maxImageNumber; i > Math.max(0, this.maxImageNumber - 30); i--) {
-            numbers.push(i);
+        // Check images from highest to lowest (most recent first)
+        for (let i = this.maxImageNumber; i > 0; i--) {
+            checkPromises.push(this.checkImageExists(i));
+            
+            if (checkPromises.length >= 15) {
+                const results = await Promise.all(checkPromises);
+                this.availableImages.push(...results.filter(img => img !== null));
+                checkPromises.length = 0;
+            }
         }
-        return numbers;
+        
+        if (checkPromises.length > 0) {
+            const results = await Promise.all(checkPromises);
+            this.availableImages.push(...results.filter(img => img !== null));
+        }
+        
+        console.log(`✅ Found ${this.availableImages.length} images`);
+        this.totalImages = this.availableImages.length;
     }
 
-    async loadFirstBatch(commonNumbers) {
-        console.log("📦 Loading first batch...");
-        
-        const loadPromises = commonNumbers.map(num => 
-            this.loadSingleImage(num).catch(() => null)
-        );
+    async checkImageExists(imageNumber) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => resolve(imageNumber);
+            img.onerror = () => resolve(null);
+            setTimeout(() => resolve(null), 300); // Faster timeout
+            img.src = `images/${imageNumber}.jpg`;
+        });
+    }
 
-        const results = await Promise.all(loadPromises);
-        const successfulLoads = results.filter(img => img !== null);
+    loadInitialImages() {
+        if (this.availableImages.length === 0) {
+            this.loading.innerHTML = '<div class="loader"></div><p>No images found. Please check your images folder.</p>';
+            return;
+        }
+        this.loadImageBatch();
+    }
+
+    async loadImageBatch() {
+        if (this.isLoading || this.currentBatch * this.batchSize >= this.totalImages) return;
         
-        console.log(`✅ First batch loaded: ${successfulLoads.length} images`);
+        this.isLoading = true;
+        this.loading.innerHTML = '<div class="loader"></div><p>Loading images...</p>';
+
+        const startIndex = this.currentBatch * this.batchSize;
+        const endIndex = Math.min(startIndex + this.batchSize, this.totalImages);
         
-        // Hide loading after first successful images
-        if (successfulLoads.length > 0) {
+        const loadPromises = [];
+        
+        for (let i = startIndex; i < endIndex; i++) {
+            const imageNumber = this.availableImages[i];
+            loadPromises.push(this.loadSingleImage(imageNumber));
+        }
+
+        await Promise.all(loadPromises);
+        this.currentBatch++;
+        this.isLoading = false;
+        
+        // Hide loading after first batch
+        if (this.currentBatch >= 1) {
             setTimeout(() => {
                 this.loading.style.display = 'none';
             }, 500);
         }
     }
 
-    async scanRemainingImages() {
-        console.log("🔍 Scanning for additional images...");
-        
-        // Check remaining images in parallel batches
-        const batchSize = 10;
-        const allPromises = [];
-        
-        for (let i = this.maxImageNumber; i > 0; i--) {
-            // Skip already loaded common numbers
-            if (i > this.maxImageNumber - 30) continue;
-            
-            allPromises.push(this.checkAndLoadImage(i));
-            
-            if (allPromises.length >= batchSize) {
-                await Promise.all(allPromises);
-                allPromises.length = 0;
-            }
-        }
-        
-        if (allPromises.length > 0) {
-            await Promise.all(allPromises);
-        }
-        
-        console.log("🎉 Image scanning complete!");
-    }
-
-    async checkAndLoadImage(imageNumber) {
-        try {
-            const exists = await this.checkImageExists(imageNumber);
-            if (exists && !this.loadedImages.includes(imageNumber)) {
-                await this.loadSingleImage(imageNumber);
-            }
-        } catch (error) {
-            // Silent fail - just skip this image
-        }
-    }
-
-    async checkImageExists(imageNumber) {
+    async loadSingleImage(imageNumber) {
         return new Promise((resolve) => {
             const img = new Image();
-            let resolved = false;
-            
-            const resolveOnce = (result) => {
-                if (!resolved) {
-                    resolved = true;
-                    resolve(result);
-                }
-            };
-
-            img.onload = () => resolveOnce(true);
-            img.onerror = () => resolveOnce(false);
-            
-            // Much shorter timeout for faster scanning
-            setTimeout(() => resolveOnce(false), 100);
-            
-            img.src = `images/${imageNumber}.jpg`;
-        });
-    }
-
-    async loadSingleImage(imageNumber) {
-        return new Promise((resolve, reject) => {
-            const img = new Image();
-            
             img.onload = () => {
                 this.addImageToGrid(imageNumber, img.src);
                 this.loadedImages.push(imageNumber);
-                resolve(imageNumber);
+                resolve();
             };
-            
             img.onerror = () => {
-                reject(new Error(`Failed to load image ${imageNumber}`));
+                console.log(`⚠️ Failed to load image ${imageNumber}.jpg`);
+                resolve();
             };
-            
             img.src = `images/${imageNumber}.jpg`;
         });
     }
@@ -676,37 +650,17 @@ class Gallery {
             if (scrollTimeout) clearTimeout(scrollTimeout);
             
             scrollTimeout = setTimeout(() => {
-                if (this.isLoading || this.loadedImages.length < 12) return;
+                if (this.isLoading) return;
                 
                 const scrollTop = window.scrollY || document.documentElement.scrollTop;
                 const windowHeight = window.innerHeight;
                 const documentHeight = document.documentElement.scrollHeight;
                 
-                // Load more when 300px from bottom
-                if (scrollTop + windowHeight >= documentHeight - 300) {
-                    this.loadMoreImages();
+                if (scrollTop + windowHeight >= documentHeight - 200) {
+                    this.loadImageBatch();
                 }
-            }, 100);
+            }, 150);
         });
-    }
-
-    async loadMoreImages() {
-        if (this.isLoading) return;
-        
-        this.isLoading = true;
-        
-        // Load next batch of unscanned images
-        const startFrom = Math.max(1, this.loadedImages[this.loadedImages.length - 1] - 1);
-        const loadPromises = [];
-        
-        for (let i = startFrom; i > Math.max(1, startFrom - this.batchSize); i--) {
-            if (!this.loadedImages.includes(i)) {
-                loadPromises.push(this.checkAndLoadImage(i));
-            }
-        }
-        
-        await Promise.all(loadPromises);
-        this.isLoading = false;
     }
 
     setupModal() {
