@@ -482,6 +482,32 @@
     </div>
 
   <script>
+// Navigation Toggle - FIXED VERSION
+const navToggle = document.getElementById('navToggle');
+const navMenu = document.getElementById('navMenu');
+
+if (navToggle && navMenu) {
+    navToggle.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent event from bubbling up
+        navMenu.classList.toggle('active');
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!navToggle.contains(e.target) && !navMenu.contains(e.target)) {
+            navMenu.classList.remove('active');
+        }
+    });
+
+    // Close menu when clicking on nav links
+    const navLinks = navMenu.querySelectorAll('a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            navMenu.classList.remove('active');
+        });
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const galleryGrid = document.getElementById('galleryGrid');
     const loadingElement = document.getElementById('loading');
@@ -524,12 +550,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Store the current number for this specific image
                 const imageNumber = currentNumber;
                 
-                item.innerHTML = `<img src="images/${imageNumber}.jpg" alt="Gallery Image ${imageNumber}" class="gallery-img">`;
+                item.innerHTML = <img src="images/${imageNumber}.jpg" alt="Gallery Image ${imageNumber}" class="gallery-img">;
                 
                 item.addEventListener('click', function() {
                     // Use the specific image number for this item
-                    lightboxImg.src = `images/${imageNumber}.jpg`;
-                    lightboxImg.alt = `Gallery Image ${imageNumber}`;
+                    lightboxImg.src = images/${imageNumber}.jpg;
+                    lightboxImg.alt = Gallery Image ${imageNumber};
                     lightbox.classList.add('active');
                     document.body.style.overflow = 'hidden';
                 });
@@ -547,7 +573,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 tryLoadImage();
             };
             
-            img.src = `images/${currentNumber}.jpg`;
+            img.src = images/${currentNumber}.jpg;
         }
         
         tryLoadImage();
