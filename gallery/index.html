@@ -481,33 +481,7 @@
         </div>
     </div>
 
-  <script>
-// Navigation Toggle - FIXED VERSION
-const navToggle = document.getElementById('navToggle');
-const navMenu = document.getElementById('navMenu');
-
-if (navToggle && navMenu) {
-    navToggle.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent event from bubbling up
-        navMenu.classList.toggle('active');
-    });
-
-    // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!navToggle.contains(e.target) && !navMenu.contains(e.target)) {
-            navMenu.classList.remove('active');
-        }
-    });
-
-    // Close menu when clicking on nav links
-    const navLinks = navMenu.querySelectorAll('a');
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            navMenu.classList.remove('active');
-        });
-    });
-}
-
+<script>
 document.addEventListener('DOMContentLoaded', function() {
     const galleryGrid = document.getElementById('galleryGrid');
     const loadingElement = document.getElementById('loading');
@@ -518,7 +492,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Configuration - USE THE SAME APPROACH AS YOUR GALLERY.HTML
     const initialLoad = 12; // Number of images to load initially
     const loadMoreCount = 12; // Number of images to load each time
-    const startFrom = 150; // Start from highest image number (adjust this based on your actual highest image)
+    const startFrom = 120; // Start from highest image number (adjust this based on your actual highest image)
     
     let loadedImages = 0;
     let currentNumber = startFrom;
@@ -550,12 +524,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Store the current number for this specific image
                 const imageNumber = currentNumber;
                 
-                item.innerHTML = <img src="images/${imageNumber}.jpg" alt="Gallery Image ${imageNumber}" class="gallery-img">;
+                item.innerHTML = `<img src="images/${imageNumber}.jpg" alt="Gallery Image ${imageNumber}" class="gallery-img">`;
                 
                 item.addEventListener('click', function() {
                     // Use the specific image number for this item
-                    lightboxImg.src = images/${imageNumber}.jpg;
-                    lightboxImg.alt = Gallery Image ${imageNumber};
+                    lightboxImg.src = `images/${imageNumber}.jpg`;
+                    lightboxImg.alt = `Gallery Image ${imageNumber}`;
                     lightbox.classList.add('active');
                     document.body.style.overflow = 'hidden';
                 });
@@ -573,7 +547,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 tryLoadImage();
             };
             
-            img.src = images/${currentNumber}.jpg;
+            img.src = `images/${currentNumber}.jpg`;
         }
         
         tryLoadImage();
@@ -616,38 +590,52 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Toggle mobile navigation
+    // PROPER NAVIGATION TOGGLE - RESTORED FROM YOUR ORIGINAL
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
     const body = document.querySelector('body');
     
-    hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('active');
-        navLinks.classList.toggle('open');
-        body.classList.toggle('no-scroll');
-    });
+    if (hamburger && navLinks) {
+        hamburger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            hamburger.classList.toggle('active');
+            navLinks.classList.toggle('open');
+            body.classList.toggle('no-scroll');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('open');
+                body.classList.remove('no-scroll');
+            }
+        });
+
+        // Close menu when clicking on nav links
+        const navLinksItems = navLinks.querySelectorAll('a');
+        navLinksItems.forEach(link => {
+            link.addEventListener('click', function() {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('open');
+                body.classList.remove('no-scroll');
+            });
+        });
+    }
     
     // Header scroll effect
     const header = document.getElementById('header');
     
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 100) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
-        }
-    });
-    
-    // Close mobile menu when clicking on a link
-    document.querySelectorAll('.nav-links a').forEach(link => {
-        link.addEventListener('click', () => {
-            hamburger.classList.remove('active');
-            navLinks.classList.remove('open');
-            body.classList.remove('no-scroll');
+    if (header) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
         });
-    });
+    }
 });
-</script>
-
+</script> 
 </body>
 </html>
